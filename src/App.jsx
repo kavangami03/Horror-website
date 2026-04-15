@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Navbar from './components/Navbar';
@@ -15,25 +15,33 @@ import Investigations from './pages/Investigations';
 import Gallery from './pages/Gallery';
 import Contact from './pages/Contact';
 
-function App() {
-  const location = useLocation();
-  const [showIntro, setShowIntro] = useState(() => {
-    return !sessionStorage.getItem('obscura_intro_seen');
-  });
+const App = () => {
+  const [showIntro, setShowIntro] = useState(true);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    if (showIntro) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [showIntro]);
 
   const handleFinishIntro = () => {
-    sessionStorage.setItem('obscura_intro_seen', 'true');
     setShowIntro(false);
   };
 
   return (
     <SmoothScroll>
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {showIntro && (
-          <>
-            <Loader onComplete={() => {}} />
-            <WarningModal onConfirm={handleFinishIntro} />
-          </>
+          <div className="intro-sequence" key="intro">
+            {!isLoaded ? (
+              <Loader key="loader" onComplete={() => setIsLoaded(true)} />
+            ) : (
+              <WarningModal key="modal" onConfirm={handleFinishIntro} />
+            )}
+          </div>
         )}
       </AnimatePresence>
       <ScrollToTop />
