@@ -1,0 +1,264 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant:ital,wght@0,300;0,500;1,300&display=swap');
+
+:root {
+  --bg-color: #050505;
+  --accent-color: #7a0000;
+  --text-color: #ffffff;
+  --text-secondary: #cccccc;
+  --heading-font: 'Cinzel', serif;
+  --body-font: 'Inter', sans-serif;
+  --serif-font: 'Playfair Display', serif;
+  --accent-glow: rgba(122, 0, 0, 0.4);
+  --transition-slow: 1.2s cubic-bezier(0.7, 0, 0.3, 1);
+  --transition-medium: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--body-font);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  cursor: none;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+a, button, input, textarea, .flicker {
+  cursor: none !important;
+}
+
+h1, h2, h3, h4, .heading {
+  font-family: var(--heading-font);
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.3s ease;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-color);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--accent-color);
+}
+
+/* Base Layout Classes */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.cinematic-text {
+  font-family: var(--serif-font);
+  font-style: italic;
+  font-size: 1.4rem;
+  color: #eeeeee;
+  letter-spacing: 0.1em;
+  line-height: 1.4;
+  opacity: 0.95;
+}
+
+.description, .hero-desc {
+  color: #cccccc !important;
+  font-weight: 400;
+  line-height: 1.8;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 20px;
+  }
+}
+
+.section-padding {
+  padding: 160px 0;
+}
+
+@media (max-width: 768px) {
+  .section-padding {
+    padding: 80px 0;
+  }
+}
+
+/* Typography Helpers */
+.cinematic-text {
+  font-family: var(--serif-font);
+  font-style: italic;
+  font-size: 1.2rem;
+  opacity: 0.8;
+  letter-spacing: 0.05em;
+}
+
+/* Animations */
+.reveal-text {
+  overflow: hidden;
+  display: block;
+}
+
+.reveal-text span {
+  display: block;
+}
+
+/* Premium Effects */
+.vignette {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, transparent 20%, rgba(0, 0, 0, 0.8) 70%, rgba(60, 0, 0, 0.3) 100%);
+  pointer-events: none;
+  z-index: 9998;
+}
+
+.blood-vignette {
+  position: fixed;
+  inset: 0;
+  box-shadow: inset 0 0 100px rgba(122, 0, 0, 0.15);
+  pointer-events: none;
+  z-index: 10000;
+  animation: heartbeat 2s infinite ease-in-out;
+}
+
+@keyframes heartbeat {
+  0%, 100% { box-shadow: inset 0 0 100px rgba(102, 0, 0, 0.1); }
+  50% { box-shadow: inset 0 0 150px rgba(102, 0, 0, 0.3); }
+}
+
+.grain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0.03;
+  background-image: url("https://www.transparenttextures.com/patterns/carbon-fibre.png");
+}
+
+/* Flicker Animation */
+@keyframes flicker {
+  0% { opacity: 0.95; }
+  5% { opacity: 0.85; }
+  10% { opacity: 0.95; }
+  15% { opacity: 1; }
+  25% { opacity: 0.9; }
+  30% { opacity: 1; }
+  70% { opacity: 0.95; }
+  72% { opacity: 0.8; }
+  75% { opacity: 0.95; }
+  100% { opacity: 1; }
+}
+
+.flicker:hover {
+  animation: flicker 0.2s infinite;
+}
+
+/* Smooth Scroll Container */
+/* Flashlight Effect */
+.flashlight {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 10;
+  background: radial-gradient(
+    circle 200px at var(--mouse-x) var(--mouse-y),
+    transparent 0%,
+    rgba(0, 0, 0, 0.95) 100%
+  );
+}
+
+/* Glitch Text */
+.glitch-text {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-color);
+}
+
+.glitch-text::before {
+  left: 2px;
+  text-shadow: -2px 0 var(--accent-color);
+  clip: rect(44px, 450px, 56px, 0);
+  animation: glitch-anim 5s infinite linear alternate-reverse;
+}
+
+.glitch-text::after {
+  left: -2px;
+  text-shadow: -2px 0 #fff;
+  clip: rect(44px, 450px, 56px, 0);
+  animation: glitch-anim2 5s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim {
+  0% { clip: rect(31px, 9999px, 94px, 0); }
+  20% { clip: rect(62px, 9999px, 42px, 0); }
+  40% { clip: rect(16px, 9999px, 78px, 0); }
+  60% { clip: rect(87px, 9999px, 12px, 0); }
+  80% { clip: rect(53px, 9999px, 64px, 0); }
+  100% { clip: rect(24px, 9999px, 35px, 0); }
+}
+
+@keyframes glitch-anim2 {
+  0% { clip: rect(67px, 9999px, 12px, 0); }
+  20% { clip: rect(45px, 9999px, 86px, 0); }
+  40% { clip: rect(23px, 9999px, 54px, 0); }
+  60% { clip: rect(12px, 9999px, 98px, 0); }
+  80% { clip: rect(98px, 9999px, 23px, 0); }
+  100% { clip: rect(34px, 9999px, 76px, 0); }
+}
+
+/* Horror Reveal */
+.horror-reveal {
+  opacity: 0;
+  filter: blur(10px);
+  transform: scale(1.1);
+  transition: all 2s cubic-bezier(0.7, 0, 0.3, 1);
+}
+
+.horror-reveal.visible {
+  opacity: 1;
+  filter: blur(0);
+  transform: scale(1);
+}
+
+.red-glimmer {
+  text-shadow: 0 0 10px var(--accent-color);
+  color: var(--accent-color);
+}
+
+#root {
+  min-height: 100vh;
+}
