@@ -253,7 +253,39 @@ const Home = () => {
            </div>
         </section>
 
-        {/* SECTION 4: Final Warning */}
+        {/* SECTION 4: The Whispering Archive */}
+        <section className="whispering-archive section-padding">
+           <div className="container">
+              <span className="label red-glimmer">FIELD RECORDING #992</span>
+              <h2 className="heading large">THE WHISPERING <br/> ARCHIVE</h2>
+              <div className="whisper-grid">
+                 {[1, 2, 3].map(i => (
+                   <motion.div 
+                    key={i} 
+                    className="whisper-card"
+                    whileHover={{ scale: 1.02 }}
+                   >
+                      <div className="card-glitch" />
+                      <div className="audio-wave">
+                         {[...Array(20)].map((_, j) => (
+                           <motion.div 
+                            key={j}
+                            animate={{ height: [10, Math.random() * 60, 10] }}
+                            transition={{ duration: 0.3 + Math.random(), repeat: Infinity }}
+                            style={{ width: '2px', background: 'var(--accent-color)', margin: '0 2px' }}
+                           />
+                         ))}
+                      </div>
+                      <h3>EVP CASE {i}0{i}</h3>
+                      <p>"...it's not the darkness we fear, but what hides within it..."</p>
+                      <div className="metadata">SYNC: CAPTURED // 12.4Hz</div>
+                   </motion.div>
+                 ))}
+              </div>
+           </div>
+        </section>
+
+        {/* SECTION 5: The Final Warning */}
         <section className="final-section">
            <div className="horror-gradient" />
            <BloodEffect intensity={3} speed={15} />
@@ -488,6 +520,42 @@ const Home = () => {
           .giant { font-size: clamp(4rem, 15vw, 15rem); line-height: 0.8; text-align: center; }
 
           .centered { text-align: center; position: relative; z-index: 10; }
+          /* Whispering Archive */
+          .whispering-archive { background: #080808; border-top: 1px solid rgba(139,0,0,0.1); }
+          
+          .whisper-grid {
+             display: grid;
+             grid-template-columns: repeat(3, 1fr);
+             gap: 40px;
+             margin-top: 80px;
+          }
+
+          @media (max-width: 900px) { .whisper-grid { grid-template-columns: 1fr; } }
+
+          .whisper-card {
+             background: rgba(255,255,255,0.01);
+             padding: 40px;
+             border: 1px solid rgba(255,255,255,0.03);
+             position: relative;
+             overflow: hidden;
+          }
+
+          .whisper-card h3 { font-size: 0.8rem; letter-spacing: 4px; color: var(--accent-color); margin: 25px 0 15px; }
+          .whisper-card p { font-size: 0.9rem; font-style: italic; color: #555; }
+          .audio-wave { display: flex; align-items: flex-end; height: 60px; margin-bottom: 20px; }
+          .metadata { font-family: monospace; font-size: 0.6rem; color: #333; margin-top: 25px; }
+
+          .whisper-card:hover { border-color: var(--accent-color); background: rgba(139,0,0,0.05); }
+
+          /* Mobile Responsiveness for 370px */
+          @media (max-width: 400px) {
+             .main-title { font-size: 3.5rem; }
+             .reveal-title { font-size: 2.5rem; }
+             .section-padding { padding: 80px 0; }
+             .scroll-content h2 { font-size: 3rem; }
+             .giant { font-size: 4rem; }
+             .enter-btn { padding: 15px 30px; font-size: 0.6rem; }
+          }
         `}</style>
       </div>
     </PageWrapper>

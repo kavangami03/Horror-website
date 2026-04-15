@@ -134,6 +134,29 @@ const About = () => {
            </div>
         </section>
 
+        {/* PSYCHOLOGICAL MIRROR (NEW) */}
+        <section className="mirror-section section-padding bg-darker">
+           <div className="container split-layout">
+              <div className="left">
+                 <span className="label">REFLECTIVE ANOMALY</span>
+                 <h2 className="heading">The Mirror <br/> Effect</h2>
+                 <p className="description">
+                   They don't just watch you. They reflect you. The entities in the gaps 
+                   are biological mirrors, amplifying your deepest cognitive fears until 
+                   reality begins to tear.
+                 </p>
+                 <div className="flicker-data">[ DATA SENSITIVITY: 98% ]</div>
+              </div>
+              <motion.div 
+                className="mirror-box"
+                whileHover={{ filter: 'hue-rotate(90deg) contrast(2)' }}
+              >
+                 <div className="static-layer" />
+                 <div className="mirror-text">YOU ARE NOT ALONE</div>
+              </motion.div>
+           </div>
+        </section>
+
         {/* TIMELINE SECTION */}
         <section className="timeline-section section-padding">
            <div className="container">
@@ -364,6 +387,44 @@ const About = () => {
           .red-glimmer { text-shadow: 0 0 10px var(--accent-color); }
           .bg-darker { background: #020202; }
           .centered { text-align: center; }
+          .split-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+          @media (max-width: 900px) { .split-layout { grid-template-columns: 1fr; } }
+
+          .mirror-box {
+             height: 400px;
+             background: #111;
+             border: 1px solid rgba(255,255,255,0.05);
+             position: relative;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             overflow: hidden;
+             cursor: none;
+          }
+
+          .static-layer {
+             position: absolute;
+             inset: 0;
+             background: url("https://media.giphy.com/media/oEI9uWUicKgL0kL8L3/giphy.gif");
+             mix-blend-mode: overlay;
+             opacity: 0.1;
+          }
+
+          .mirror-text {
+             font-family: var(--heading-font);
+             font-size: 1.5rem;
+             letter-spacing: 10px;
+             color: #222;
+             transition: 0.5s;
+          }
+
+          .mirror-box:hover .mirror-text {
+             color: var(--accent-color);
+             text-shadow: 0 0 20px var(--accent-color);
+             transform: scale(1.1);
+          }
+
+          .flicker-data { font-family: monospace; font-size: 0.7rem; color: #444; margin-top: 30px; animation: flicker 0.5s infinite; }
         `}</style>
       </div>
     </PageWrapper>
