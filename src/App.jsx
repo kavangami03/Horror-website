@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Navbar from './components/Navbar';
@@ -17,11 +17,25 @@ import Contact from './pages/Contact';
 
 function App() {
   const location = useLocation();
+  const [showIntro, setShowIntro] = useState(() => {
+    return !sessionStorage.getItem('obscura_intro_seen');
+  });
+
+  const handleFinishIntro = () => {
+    sessionStorage.setItem('obscura_intro_seen', 'true');
+    setShowIntro(false);
+  };
 
   return (
     <SmoothScroll>
-      <Loader />
-      <WarningModal />
+      <AnimatePresence>
+        {showIntro && (
+          <>
+            <Loader onComplete={() => {}} />
+            <WarningModal onConfirm={handleFinishIntro} />
+          </>
+        )}
+      </AnimatePresence>
       <ScrollToTop />
       <CustomCursor />
       <JumpScare />
