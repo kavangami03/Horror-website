@@ -1,84 +1,189 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const horrorSubliminals = [
+  "EYES OPEN", "WATCHING", "BEHIND YOU", "DONT BLINK", "ETERNAL SILENCE", "PROJECT OBSCURA"
+];
+
 const Loader = () => {
   const [progress, setProgress] = useState(0);
   const [complete, setComplete] = useState(false);
+  const [subliminal, setSubliminal] = useState("");
 
   useEffect(() => {
+    // Progress logic
     const interval = setInterval(() => {
       setProgress(prev => {
         if (prev >= 100) {
           clearInterval(interval);
-          setTimeout(() => setComplete(true), 500);
+          setTimeout(() => setComplete(true), 1200); // Wait for final impact
           return 100;
         }
-        return prev + Math.random() * 15;
+        return prev + Math.random() * 8;
       });
-    }, 200);
+    }, 150);
 
-    return () => clearInterval(interval);
+    // Subliminal logic (violent flicker)
+    const subInterval = setInterval(() => {
+       if (Math.random() > 0.7) {
+          setSubliminal(horrorSubliminals[Math.floor(Math.random() * horrorSubliminals.length)]);
+          setTimeout(() => setSubliminal(""), 50);
+       }
+    }, 400);
+
+    return () => {
+      clearInterval(interval);
+      clearInterval(subInterval);
+    };
   }, []);
 
   return (
     <AnimatePresence>
       {!complete && (
         <motion.div
-          className="loader-overlay"
-          exit={{ y: "-100%", transition: { duration: 1, ease: [0.7, 0, 0.3, 1] } }}
+          className="advanced-loader"
+          exit={{ 
+            opacity: 0, 
+            scale: 2,
+            filter: 'blur(40px)',
+            transition: { duration: 1.5, ease: [0.7, 0, 0.3, 1] } 
+          }}
           style={{
             position: 'fixed',
             inset: 0,
-            backgroundColor: '#050505',
-            zIndex: 30000,
+            backgroundColor: '#000',
+            zIndex: 999999,
             display: 'flex',
-            flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            overflow: 'hidden'
           }}
         >
+          {/* THE HEARTBEAT VISUALIZER */}
           <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="loader-content"
-          >
-             <h2 style={{ 
-               fontFamily: 'var(--heading-font)', 
-               letterSpacing: '10px', 
-               fontSize: '0.8rem', 
-               color: 'var(--accent-color)',
-               marginBottom: '20px'
-             }}>
-               ACCESSING CLASSIFIED ARCHIVE
+            animate={{ 
+              scale: [1, 1.05, 1],
+              opacity: [0.3, 0.6, 0.3]
+            }}
+            transition={{ duration: 0.6, repeat: Infinity, ease: "easeInOut" }}
+            style={{
+              position: 'absolute',
+              width: '500px',
+              height: '500px',
+              borderRadius: '50%',
+              background: 'radial-gradient(circle, rgba(139, 0, 0, 0.1) 0%, transparent 70%)',
+              filter: 'blur(30px)'
+            }}
+          />
+
+          <div className="loader-inner" style={{ position: 'relative', zIndex: 10, textAlign: 'center' }}>
+             
+             {/* SUBLIMINAL FLASH */}
+             <div className="subliminal-wrap" style={{ height: '20px', marginBottom: '10px' }}>
+                <AnimatePresence>
+                   {subliminal && (
+                     <motion.span 
+                      initial={{ opacity: 1, scale: 1.5 }}
+                      animate={{ opacity: 0.4 }}
+                      exit={{ opacity: 0 }}
+                      style={{ color: '#ff0000', fontSize: '0.6rem', letterSpacing: '8px', fontWeight: 'bold' }}
+                     >
+                       {subliminal}
+                     </motion.span>
+                   )}
+                </AnimatePresence>
+             </div>
+
+             <h2 className="loading-title glitch-text" data-text="CALIBRATING REALITY">
+               CALIBRATING REALITY
              </h2>
-             <div style={{ 
-               width: '300px', 
-               height: '2px', 
-               background: 'rgba(255,255,255,0.05)', 
-               position: 'relative' 
-             }}>
-                <motion.div 
-                  style={{ 
-                    position: 'absolute', 
-                    height: '100%', 
-                    background: 'var(--accent-color)', 
-                    width: `${progress}%`,
-                    boxShadow: '0 0 20px var(--accent-glow)'
-                  }}
-                />
+             
+             <div className="blood-bar-container">
+                <div className="blood-fill" style={{ width: `${progress}%` }} />
+                <div className="drip-point" style={{ left: `${progress}%` }} />
              </div>
-             <div style={{ 
-               marginTop: '15px', 
-               fontSize: '0.6rem', 
-               fontFamily: 'monospace', 
-               opacity: 0.5,
-               textAlign: 'right'
-             }}>
-                {Math.round(progress)}% DECRYPTED
+
+             <div className="loader-stats">
+                <div className="stat-item">
+                   <span>NEURAL SYNC:</span>
+                   <span>{Math.round(progress)}%</span>
+                </div>
+                <div className="stat-item">
+                   <span>THREAT PROD:</span>
+                   <span>STABLE</span>
+                </div>
              </div>
-          </motion.div>
+          </div>
+
+          <div className="noise-overlay" />
           
-          <div className="vhs-grain" />
+          <style jsx>{`
+            .advanced-loader { cursor: none; }
+
+            .loading-title {
+              font-family: var(--heading-font);
+              color: #fff;
+              font-size: 1rem;
+              letter-spacing: 12px;
+              margin-bottom: 30px;
+            }
+
+            .blood-bar-container {
+               width: 350px;
+               height: 4px;
+               background: rgba(255,255,255,0.02);
+               position: relative;
+               margin: 0 auto;
+               border: 1px solid rgba(255,255,255,0.05);
+            }
+
+            .blood-fill {
+               height: 100%;
+               background: linear-gradient(90deg, #330000, #8b0000);
+               box-shadow: 0 0 15px #8b0000;
+               transition: width 0.3s ease-out;
+            }
+
+            .drip-point {
+               position: absolute;
+               top: -2px;
+               width: 8px;
+               height: 8px;
+               background: #8b0000;
+               border-radius: 50%;
+               box-shadow: 0 0 10px #ff0000;
+               transform: translateX(-50%);
+            }
+
+            .loader-stats {
+               display: flex;
+               justify-content: space-between;
+               width: 350px;
+               margin: 20px auto 0;
+               font-family: monospace;
+               font-size: 0.6rem;
+               color: #444;
+               text-transform: uppercase;
+               letter-spacing: 2px;
+            }
+
+            .stat-item { display: flex; gap: 10px; }
+
+            .noise-overlay {
+               position: absolute;
+               inset: 0;
+               background: url("https://media.giphy.com/media/oEI9uWUicKgL0kL8L3/giphy.gif");
+               mix-blend-mode: overlay;
+               opacity: 0.03;
+               pointer-events: none;
+            }
+
+            @keyframes flicker {
+               0% { opacity: 1; }
+               50% { opacity: 0.8; }
+               100% { opacity: 1; }
+            }
+          `}</style>
         </motion.div>
       )}
     </AnimatePresence>
