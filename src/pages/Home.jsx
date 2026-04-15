@@ -7,7 +7,7 @@ import MagneticButton from '../components/MagneticButton';
 import BloodEffect from '../components/BloodEffect';
 
 // Images
-import homeHero from '/C:/Users/softqube/.gemini/antigravity/brain/be6ffcca-4c3b-4674-8441-e8749a322839/cinematic_horror_location_1_1776254658454.png';
+import homeHero from '../assets/images/hero_premium.png';
 import glassHands from '../assets/images/glass-hands.png';
 import cursedDoll from '../assets/images/cursed-doll.png';
 import investigation1 from '../assets/images/investigation-1.png';
