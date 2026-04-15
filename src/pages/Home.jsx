@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import PageWrapper from '../components/Transition';
 import MagneticButton from '../components/MagneticButton';
 import BloodEffect from '../components/BloodEffect';
@@ -13,7 +14,7 @@ import cursedDoll from '../assets/images/cursed-doll.png';
 import investigation1 from '../assets/images/investigation-1.png';
 import investigation2 from '../assets/images/investigation-2.png';
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 const Home = () => {
   const containerRef = useRef(null);
@@ -24,29 +25,53 @@ const Home = () => {
   const [isDescending, setIsDescending] = useState(false);
 
   const handleDescend = () => {
+    if (isDescending) return;
     setIsDescending(true);
-    setGlitchText("LEAVE NOW");
+    setGlitchText("PROTOCOL BREACHED");
     
-    // Violent shake and glitch
+    // 1. Violent Initial Impact
+    const timeline = gsap.timeline();
+    
+    // Create a series of rapid inversions and color shifts
+    timeline.to("body", { filter: "invert(1) contrast(5)", duration: 0.05, repeat: 5, yoyo: true })
+            .to(heroRef.current, { scale: 1.1, ease: "power4.out", duration: 0.1 }, 0)
+            .to(".vhs-scanlines", { opacity: 1, backgroundColor: "#fff", duration: 0.05, repeat: 10, yoyo: true }, 0);
+
+    // 2. The "Descent" Motion
+    gsap.to(window, {
+       duration: 2.5,
+       scrollTo: { y: "#intro", autoKill: false },
+       ease: "expo.inOut"
+    });
+
+    // 3. Shake and UI Destruction
     gsap.to(heroRef.current, { 
-      x: () => (Math.random() - 0.5) * 20, 
-      y: () => (Math.random() - 0.5) * 20, 
-      duration: 0.1, 
-      repeat: 5, 
+      x: () => (Math.random() - 0.5) * 100, 
+      y: () => (Math.random() - 0.5) * 100, 
+      rotate: () => (Math.random() - 0.5) * 10,
+      duration: 0.08, 
+      repeat: 15, 
       yoyo: true,
       onComplete: () => {
-        gsap.to(heroRef.current, { x: 0, y: 0, duration: 0.1 });
+        gsap.set(heroRef.current, { x: 0, y: 0, rotate: 0, filter: "none", scale: 1 });
         setGlitchText("OBSCURA");
-        document.getElementById('intro').scrollIntoView({ behavior: 'smooth' });
         setTimeout(() => setIsDescending(false), 1000);
       }
     });
 
-    // Flash screen red
+    // 4. Violent Flash and Audio-Visual "Pop"
     const flash = document.createElement('div');
-    flash.style.cssText = 'position:fixed;inset:0;background:#7a0000;z-index:50000;pointer-events:none;opacity:0.8;mix-blend-mode:multiply;';
+    flash.className = "violent-impact-overlay";
+    flash.style.cssText = 'position:fixed;inset:0;background:#fff;z-index:999999;pointer-events:none;opacity:0;';
     document.body.appendChild(flash);
-    gsap.to(flash, { opacity: 0, duration: 0.5, onComplete: () => flash.remove() });
+
+    gsap.to(flash, { 
+      opacity: 1, 
+      duration: 0.1, 
+      onComplete: () => {
+        gsap.to(flash, { opacity: 0, duration: 1, onComplete: () => flash.remove() });
+      } 
+    });
   };
 
   useEffect(() => {
@@ -228,26 +253,87 @@ const Home = () => {
           </div>
         </div>
 
-        {/* SECTION 3: Discovery Grid */}
+        {/* SECTION 3: The Evidence Room */}
         <section className="section-padding evidence-section">
            <div className="container">
-              <h2 className="heading centered reveal-title">The Evidence Room</h2>
+              <div className="section-header">
+                 <span className="label red-glimmer">FIELD EVIDENCE // RECOVERED</span>
+                 <h2 className="heading centered reveal-title">The Evidence <span className="red-glimmer">Room</span></h2>
+              </div>
+              
               <div className="discovery-grid">
-                 <div className="grid-item tall reveal-item" onClick={() => window.location.href = '/investigations'}>
-                    <img src={cursedDoll} alt="Doll" />
-                    <div className="info"><h3>Cursed Relics</h3></div>
+                 {/* Specimen 1 */}
+                 <div className="specimen-box tall reveal-item" onClick={() => window.location.href = '/investigations'}>
+                    <div className="specimen-overlay">
+                       <div className="scan-line" />
+                       <div className="specimen-meta">
+                          <span className="id">REF: 88-ALPHA</span>
+                          <span className="hazard">LEVEL 5 // COGNITIVE</span>
+                       </div>
+                    </div>
+                    <div className="img-wrap">
+                       <img src={cursedDoll} alt="Doll" className="normal" />
+                       <img src={cursedDoll} alt="Doll Thermal" className="thermal" />
+                    </div>
+                    <div className="specimen-info">
+                       <h3>Cursed <br /> Relics</h3>
+                       <p>[ Sighted within the Blackwood Perimeter ]</p>
+                    </div>
                  </div>
-                 <div className="grid-item reveal-item" onClick={() => window.location.href = '/gallery'}>
-                    <img src={investigation1} alt="Chair" />
-                    <div className="info"><h3>Anomalies</h3></div>
+
+                 {/* Specimen 2 */}
+                 <div className="specimen-box reveal-item" onClick={() => window.location.href = '/gallery'}>
+                    <div className="specimen-overlay">
+                       <div className="scan-line" />
+                       <div className="specimen-meta">
+                          <span className="id">REF: ANOMALY-04</span>
+                          <span className="hazard">EXPERIMENTAL</span>
+                       </div>
+                    </div>
+                    <div className="img-wrap">
+                       <img src={investigation1} alt="Anomalies" className="normal" />
+                       <img src={investigation1} alt="Anomalies Thermal" className="thermal" />
+                    </div>
+                    <div className="specimen-info">
+                       <h3>Unstable <br /> Anomalies</h3>
+                    </div>
                  </div>
-                 <div className="grid-item reveal-item" onClick={() => window.location.href = '/investigations'}>
-                    <img src={investigation1} alt="Attic" />
-                    <div className="info"><h3>Locations</h3></div>
+
+                 {/* Specimen 3 */}
+                 <div className="specimen-box reveal-item" onClick={() => window.location.href = '/investigations'}>
+                    <div className="specimen-overlay">
+                       <div className="scan-line" />
+                       <div className="specimen-meta">
+                          <span className="id">LOC: SECTOR 7</span>
+                          <span className="hazard">BREACH POINT</span>
+                       </div>
+                    </div>
+                    <div className="img-wrap">
+                       <img src={investigation1} alt="Locations" className="normal" />
+                       <img src={investigation1} alt="Locations Thermal" className="thermal" />
+                    </div>
+                    <div className="specimen-info">
+                       <h3>Breach <br /> Sites</h3>
+                    </div>
                  </div>
-                 <div className="grid-item wide reveal-item" onClick={() => window.location.href = '/investigations'}>
-                    <img src={investigation2} alt="Shadow" />
-                    <div className="info"><h3>Entity Sighting</h3></div>
+
+                 {/* Specimen 4 */}
+                 <div className="specimen-box wide reveal-item" onClick={() => window.location.href = '/investigations'}>
+                    <div className="specimen-overlay">
+                       <div className="scan-line" />
+                       <div className="specimen-meta">
+                          <span className="id">ENTITY: SHADOW</span>
+                          <span className="hazard">EXTREME DANGER</span>
+                       </div>
+                    </div>
+                    <div className="img-wrap">
+                       <img src={investigation2} alt="Sighting" className="normal" />
+                       <img src={investigation2} alt="Sighting Thermal" className="thermal" />
+                    </div>
+                    <div className="specimen-info">
+                       <h3>Entity <br /> Sightings</h3>
+                       <p>High-frequency residual energy detected in the hallway archives.</p>
+                    </div>
                  </div>
               </div>
            </div>
@@ -472,6 +558,7 @@ const Home = () => {
           .overlay-text { position: absolute; bottom: 30px; right: 30px; font-family: monospace; font-size: 0.7rem; color: var(--accent-color); }
 
           /* HORIZONTAL SCROLL */
+          /* HORIZONTAL SCROLL */
           .horizontal-wrapper {
             display: flex;
             width: 300%;
@@ -501,14 +588,133 @@ const Home = () => {
           .scroll-img-wrap { height: 70vh; overflow: hidden; }
           .scroll-img-wrap img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1); }
 
-          /* FINAL SECTION */
-          .final-section {
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+          /* EVIDENCE ROOM / DISCOVERY GRID */
+          .section-header { text-align: center; margin-bottom: 80px; }
+          .section-header .label { display: block; letter-spacing: 5px; font-size: 0.7rem; margin-bottom: 20px; }
+          
+          .discovery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-auto-rows: 350px;
+            gap: 20px;
+          }
+
+          .specimen-box {
             position: relative;
-            background: #000;
+            background: #0a0a0a;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+            cursor: none;
+            transition: all 0.6s cubic-bezier(0.7, 0, 0.3, 1);
+          }
+
+          .specimen-box.tall { grid-row: span 2; }
+          .specimen-box.wide { grid-column: span 2; }
+
+          .specimen-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 5;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            pointer-events: none;
+          }
+
+          .scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: rgba(139, 0, 0, 0.5);
+            box-shadow: 0 0 15px #8b0000;
+            opacity: 0;
+            transition: opacity 0.3s;
+          }
+
+          .specimen-box:hover .scan-line {
+            opacity: 1;
+            animation: scan-vertical 2s infinite linear;
+          }
+
+          @keyframes scan-vertical {
+            from { top: 0; }
+            to { top: 100%; }
+          }
+
+          .specimen-meta {
+            display: flex;
+            justify-content: space-between;
+            font-family: monospace;
+            font-size: 0.6rem;
+            color: #444;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+          }
+
+          .specimen-meta .hazard { color: #8b0000; }
+
+          .img-wrap {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+          }
+
+          .img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.8s cubic-bezier(0.7, 0, 0.3, 1);
+          }
+
+          .img-wrap .thermal {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            filter: invert(1) hue-rotate(180deg) brightness(1.2) contrast(1.5);
+            mix-blend-mode: screen;
+          }
+
+          .specimen-box:hover .img-wrap .normal {
+             transform: scale(1.1);
+             opacity: 0.3;
+             filter: grayscale(1);
+          }
+
+          .specimen-box:hover .img-wrap .thermal {
+             opacity: 1;
+             transform: scale(1.1);
+          }
+
+          .specimen-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 40px 20px 20px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            z-index: 6;
+            transform: translateY(100%);
+            transition: transform 0.6s cubic-bezier(0.7, 0, 0.3, 1);
+          }
+
+          .specimen-box:hover .specimen-info {
+            transform: translateY(0);
+          }
+
+          .specimen-info h3 { font-size: 1.5rem; line-height: 1.1; margin-bottom: 10px; }
+          .specimen-info p { font-family: monospace; font-size: 0.65rem; color: #666; letter-spacing: 1px; }
+
+          .specimen-box:hover {
+             border-color: #8b0000;
+             box-shadow: 0 0 50px rgba(139, 0, 0, 0.2);
+          }
+
+          @media (max-width: 900px) {
+            .discovery-grid { grid-template-columns: 1fr; grid-auto-rows: 400px; }
+            .specimen-box.wide { grid-column: span 1; }
+            .specimen-box.tall { grid-row: span 1; }
           }
 
           .horror-gradient {
